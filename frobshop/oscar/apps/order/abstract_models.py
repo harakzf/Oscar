@@ -31,9 +31,9 @@ logger = logging.getLogger('oscar.order')
 
 class AbstractOrder(models.Model):
     """
-    The main order model
+    主となる注文モデル。
     """
-    number = models.CharField(
+    number = models.CharField(                                              # _()：文字列を中に入れて"翻訳対象"とする
         _("Order number"), max_length=128, db_index=True, unique=True)
 
     # We track the site that each order is placed within
@@ -306,7 +306,8 @@ class AbstractOrder(models.Model):
         app_label = 'order'
         ordering = ['-date_placed']
         verbose_name = _("Order")
-        verbose_name_plural = _("Orders")
+#         verbose_name_plural = _("Orders")                # _()：中の英語を翻訳
+        verbose_name_plural = "注文一覧"
 
     def __str__(self):
         return "#%s" % (self.number,)
