@@ -335,9 +335,9 @@ class AbstractProduct(models.Model):
         help_text=_("These are products that are recommended to accompany the "
                     "main product."))
 
-    # Denormalised product rating - used by reviews app.
-    # Product has no ratings if rating is None
-    rating = models.FloatField(_('Rating'), null=True, editable=False)
+    # 非正規化された製品評価-レビューアプリで使用される
+    # 評価「なし」の場合、製品には評価項目がなくなる
+    rating = models.FloatField(_('Rating'), null=True, editable=False)              # editable=False：adminページに表示させない
 
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
 
@@ -550,7 +550,7 @@ class AbstractProduct(models.Model):
 
     def get_title(self):
         """
-        製品のタイトルを取得返却する。タイトルがない場合は親のタイトルを返す
+        製品のタイトルを取得し返却する。タイトルがない場合は親のタイトルを返す
         """
         title = self.title
         if not title and self.parent_id:
