@@ -258,26 +258,26 @@ class BasketView(ModelFormSetView):
 
 class BasketAddView(FormView):
     """
-    Handles the add-to-basket submissions, which are triggered from various
-    parts of the site. The add-to-basket form is loaded into templates using
-    a templatetag from module basket_tags.py.
+    サイトのさまざまな部分からトリガーされる、バスケットに追加する処理を実装
+
+    バスケットに追加フォームは、モジュールbasket_tags.pyのテンプレートタグを使用してテンプレートにロードされる
     """
+
     form_class = AddToBasketForm
     product_model = get_model('catalogue', 'product')
     add_signal = basket_addition
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        self.product = shortcuts.get_object_or_404(
-            self.product_model, pk=kwargs['pk'])
-        print("pass1_1")
+        self.product = shortcuts.get_object_or_404(self.product_model, pk=kwargs['pk'])
+        print("BasketAddView/post")
         return super(BasketAddView, self).post(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super(BasketAddView, self).get_form_kwargs()
         kwargs['basket'] = self.request.basket
         kwargs['product'] = self.product
-        print("pass1_2")
+        print("BasketAddView/get_form_kwargs")
         return kwargs
 
     def form_invalid(self, form):
@@ -287,7 +287,7 @@ class BasketAddView(FormView):
         clean_msgs = [m.replace('* ', '') for m in msgs if m.startswith('* ')]
         messages.error(self.request, ",".join(clean_msgs))
 
-        print("pass1_3")
+        print("BasketAddView/form_invalid")
         return redirect_to_referrer(self.request, 'basket:summary')
 
     def form_valid(self, form):
@@ -308,11 +308,11 @@ class BasketAddView(FormView):
             sender=self, product=form.product, user=self.request.user,
             request=self.request)
 
-        print("pass1_4")
+        print("BasketAddView/form_valid")
         return super(BasketAddView, self).form_valid(form)
 
     def get_success_message(self, form):
-        print("pass1_5")
+        print("BasketAddView/get_success_message")
         return render_to_string(
             'basket/messages/addition.html',
             {'product': form.product,
@@ -321,10 +321,10 @@ class BasketAddView(FormView):
     def get_success_url(self):
         post_url = self.request.POST.get('next')
         if post_url and is_safe_url(post_url, self.request.get_host()):
-            print("pass1_6")
+            print("BasketAddView/get_success_url_1")
             return post_url
 
-        print("pass1_7")
+        print("BasketAddView/get_success_url_2")
         return safe_referrer(self.request, 'basket:summary')
 
 
